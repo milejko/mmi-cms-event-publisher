@@ -1,0 +1,1 @@
+# mmi-cms-queue-publisher
