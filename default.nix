@@ -8,7 +8,7 @@
 
 let
     myPhp = pkgs.php81.buildEnv {
-        extensions = ({ enabled, all }: enabled ++ [ all.xdebug ] ++ [ all.apcu ]);
+        extensions = ({ enabled, all }: enabled ++ [ all.xdebug ] ++ [ all.apcu ] ++ [ all.amqp ]);
         extraConfig = ''
             memory_limit=256M
             xdebug.max_nesting_level=512

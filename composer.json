@@ -18,7 +18,11 @@
             "": "src/"
         }
     },
-    "minimum-stability": "dev",
+    "require": {
+        "ext-amqp": "*",
+        "mmi/mmi-cms": "^5.4.0",
+        "php-amqplib/php-amqplib": "^3.4"
+    },
     "scripts": {
         "fix:phpcbf": "phpcbf",
         "fix:php-cs-fixer": "php-cs-fixer fix src && php-cs-fixer fix tests",
@@ -42,8 +46,7 @@
         ]
     },
     "require-dev": {
-        "mmi/mmi-build-toolkit": "dev-main",
-        "mmi/mmi-cms": "*"
+        "mmi/mmi-build-toolkit": "dev-main"
     },
     "config": {
         "allow-plugins": {

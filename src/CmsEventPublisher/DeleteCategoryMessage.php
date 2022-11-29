@@ -1,0 +1,22 @@
+<?php
+
+namespace CmsEventPublisher;
+
+use Cms\Orm\CmsCategoryRecord;
+
+final class DeleteCategoryMessage implements MessageInterface
+{
+    public function __construct(private CmsCategoryRecord $cmsCategoryRecord)
+    {
+    }
+
+    public function getContent(): string
+    {
+        return json_encode([
+            'operation' => 'update',
+            'data' => [
+                'id' => $this->cmsCategoryRecord->id
+            ]
+        ]);
+    }
+}
