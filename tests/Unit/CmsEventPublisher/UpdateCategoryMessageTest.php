@@ -17,5 +17,4 @@ class UpdateCategoryMessageTest extends TestCase
         $message = new UpdateCategoryMessage($sampleCategory, $sampleSkinsetConfig);
         self::assertEquals('{"operation":"update","data":{"message":"Controller not found"}}', $message->getContent());
     }
-
 }

@@ -11,13 +11,12 @@ final class UpdateCategoryMessage implements MessageInterface
     public function __construct(
         private CmsCategoryRecord $cmsCategoryRecord,
         private CmsSkinsetConfig $cmsSkinsetConfig,
-    )
-    {   
+    ) {
     }
 
     public function getContent(): string
     {
-        return json_encode(
+        return (string) json_encode(
             [
                 'operation' => 'update',
                 'data' => (new TemplateModel($this->cmsCategoryRecord, $this->cmsSkinsetConfig))->getTransportObject(),

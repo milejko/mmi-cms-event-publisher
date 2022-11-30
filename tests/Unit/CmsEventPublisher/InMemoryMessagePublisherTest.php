@@ -14,9 +14,11 @@ class InMemoryMessagePublisherTest extends TestCase
         $publisher = new InMemoryMessagePublisher();
         $sampleRecord = new CmsCategoryRecord();
         $sampleRecord->id = 1234;
-        $publisher->publish(new DeleteCategoryMessage($sampleRecord));
-        self::assertEquals([
-            '{"operation":"delete","data":{"id":1234}}'
-        ], $publisher->getMessages());
+        $sampleMessage = new DeleteCategoryMessage($sampleRecord);
+        $publisher->publish($sampleMessage);
+        
+        self::assertEquals([$sampleMessage], $publisher->getMessages());
+        $publisher->publish($sampleMessage);
+        self::assertEquals([$sampleMessage, $sampleMessage], $publisher->getMessages());
     }
 }

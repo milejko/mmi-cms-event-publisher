@@ -15,7 +15,7 @@ class AMQPMessagePublisher implements MessagePublisherInterface
 
     public function __construct(
         private string $host,
-        private string $port,
+        private int $port,
         private string $user,
         private string $pass
     ) {

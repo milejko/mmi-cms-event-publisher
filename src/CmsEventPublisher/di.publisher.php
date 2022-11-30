@@ -9,7 +9,7 @@ use function DI\env;
 
 return [
     'cmsEventPublisher.rabbitmq.host'     => env('CMS_EVENT_PUBLISHER_RABBITMQ_HOST', ''),
-    'cmsEventPublisher.rabbitmq.port'     => env('CMS_EVENT_PUBLISHER_RABBITMQ_PORT', '5672'),
+    'cmsEventPublisher.rabbitmq.port'     => env('CMS_EVENT_PUBLISHER_RABBITMQ_PORT', 5672),
     'cmsEventPublisher.rabbitmq.username' => env('CMS_EVENT_PUBLISHER_RABBITMQ_USERNAME', ''),
     'cmsEventPublisher.rabbitmq.password' => env('CMS_EVENT_PUBLISHER_RABBITMQ_PASSWORD', ''),
 

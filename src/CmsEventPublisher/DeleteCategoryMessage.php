@@ -12,7 +12,7 @@ final class DeleteCategoryMessage implements MessageInterface
 
     public function getContent(): string
     {
-        return json_encode([
+        return (string) json_encode([
             'operation' => 'delete',
             'data' => [
                 'id' => $this->cmsCategoryRecord->id
