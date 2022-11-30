@@ -2,14 +2,12 @@
 
 namespace Tests\Unit\CmsEventPublisher;
 
-use Cms\App\CmsSkinConfig;
 use Cms\App\CmsSkinsetConfig;
-use Cms\App\CmsTemplateConfig;
 use Cms\Orm\CmsCategoryRecord;
 use CmsEventPublisher\UpdateCategoryMessage;
 use PHPUnit\Framework\TestCase;
 
-class UpdateMessageTest extends TestCase
+class UpdateCategoryMessageTest extends TestCase
 {
     public function testIfEmptySkinsetGivesWarningMessage(): void
     {

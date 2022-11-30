@@ -6,7 +6,7 @@ use Cms\Orm\CmsCategoryRecord;
 use CmsEventPublisher\DeleteCategoryMessage;
 use PHPUnit\Framework\TestCase;
 
-class DeleteMessageTest extends TestCase
+class DeleteCategoryMessageTest extends TestCase
 {
     public function testIfMessageContainsGivenText(): void
     {
@@ -14,6 +14,6 @@ class DeleteMessageTest extends TestCase
         $sampleCategory->id = 134;
 
         $message = new DeleteCategoryMessage($sampleCategory);
-        self::assertEquals('{"operation":"update","data":{"id":134}}', $message->getContent());
+        self::assertEquals('{"operation":"delete","data":{"id":134}}', $message->getContent());
     }
 }
