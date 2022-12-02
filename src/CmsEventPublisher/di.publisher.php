@@ -8,15 +8,16 @@ use Psr\Container\ContainerInterface;
 use function DI\env;
 
 return [
-    'cmsEventPublisher.rabbitmq.host'     => env('CMS_EVENT_PUBLISHER_RABBITMQ_HOST', ''),
+    'cmsEventPublisher.rabbitmq.enabled'  => env('CMS_EVENT_PUBLISHER_RABBITMQ_ENABLED', false),
+    'cmsEventPublisher.rabbitmq.host'     => env('CMS_EVENT_PUBLISHER_RABBITMQ_HOST', 'localhost'),
     'cmsEventPublisher.rabbitmq.port'     => env('CMS_EVENT_PUBLISHER_RABBITMQ_PORT', 5672),
     'cmsEventPublisher.rabbitmq.username' => env('CMS_EVENT_PUBLISHER_RABBITMQ_USERNAME', ''),
     'cmsEventPublisher.rabbitmq.password' => env('CMS_EVENT_PUBLISHER_RABBITMQ_PASSWORD', ''),
 
     //message publisher
     MessagePublisherInterface::class => function (ContainerInterface $container) {
-        //no host info: InMemoryPublisher (test purpose)
-        if (!$container->get('cmsEventPublisher.rabbitmq.host')) {
+        //rabbit not enabled (using file publisher)
+        if (!$container->get('cmsEventPublisher.rabbitmq.enabled')) {
             return new InMemoryMessagePublisher();
         }
         //AMQP publisher

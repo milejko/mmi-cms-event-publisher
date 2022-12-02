@@ -19,4 +19,9 @@ final class DeleteCategoryMessage implements MessageInterface
             ]
         ]);
     }
+
+    public function getRoute(): string
+    {
+        return $this->cmsCategoryRecord->getScope();
+    }
 }

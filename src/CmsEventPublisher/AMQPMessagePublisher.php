@@ -8,7 +8,7 @@ use PhpAmqpLib\Message\AMQPMessage;
 class AMQPMessagePublisher implements MessagePublisherInterface
 {
     private const EXCHANGE_TYPE = 'fanout';
-    private const EXCHANGE_NAME = 'cms-category';
+    private const EXCHANGE_NAME = 'cms.content.updates';
     private const EXCHANGE_DURABLE = true;
     private const EXCHANGE_PASSIVE = false;
     private const EXCHANGE_AUTODELETE = false;
@@ -35,7 +35,7 @@ class AMQPMessagePublisher implements MessagePublisherInterface
             self::EXCHANGE_AUTODELETE
         );
 
-        $channel->basic_publish(new AMQPMessage($message->getContent()), self::EXCHANGE_NAME);
+        $channel->basic_publish(new AMQPMessage($message->getContent()), self::EXCHANGE_NAME, $message->getRoute());
         $channel->close();
         $connection->close();
     }

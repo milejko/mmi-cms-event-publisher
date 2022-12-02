@@ -23,4 +23,9 @@ final class UpdateCategoryMessage implements MessageInterface
             ]
         );
     }
+
+    public function getRoute(): string
+    {
+        return $this->cmsCategoryRecord->getScope();
+    }
 }

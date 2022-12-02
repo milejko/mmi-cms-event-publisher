@@ -12,8 +12,10 @@ class DeleteCategoryMessageTest extends TestCase
     {
         $sampleCategory = new CmsCategoryRecord();
         $sampleCategory->id = 134;
+        $sampleCategory->template = 'application/folder';
 
         $message = new DeleteCategoryMessage($sampleCategory);
         self::assertEquals('{"operation":"delete","data":{"id":134}}', $message->getContent());
+        self::assertEquals('application', $message->getRoute());
     }
 }

@@ -7,17 +7,20 @@ use CmsEventPublisher\DeleteCategoryMessage;
 use CmsEventPublisher\InMemoryMessagePublisher;
 use PHPUnit\Framework\TestCase;
 
-class InMemoryMessagePublisherTest extends TestCase
+class FileMessagePublisherTest extends TestCase
 {
-    public function testIfMessageIsSent():void
+    public function testIfMessageIsPublished():void
     {
         $publisher = new InMemoryMessagePublisher();
         $sampleRecord = new CmsCategoryRecord();
         $sampleRecord->id = 1234;
+        $sampleRecord->template = 'application/folder';
+
         $sampleMessage = new DeleteCategoryMessage($sampleRecord);
         $publisher->publish($sampleMessage);
         
         self::assertEquals([$sampleMessage], $publisher->getMessages());
+
         $publisher->publish($sampleMessage);
         self::assertEquals([$sampleMessage, $sampleMessage], $publisher->getMessages());
     }
