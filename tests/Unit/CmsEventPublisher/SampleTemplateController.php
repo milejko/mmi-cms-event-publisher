@@ -6,5 +6,4 @@ use Cms\AbstractTemplateController;
 
 class SampleTemplateController extends AbstractTemplateController
 {
-    
 }

@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class FileMessagePublisherTest extends TestCase
 {
-    public function testIfMessageIsPublished():void
+    public function testIfMessageIsPublished(): void
     {
         $publisher = new InMemoryMessagePublisher();
         $sampleRecord = new CmsCategoryRecord();
@@ -18,7 +18,7 @@ class FileMessagePublisherTest extends TestCase
 
         $sampleMessage = new DeleteCategoryMessage($sampleRecord);
         $publisher->publish($sampleMessage);
-        
+
         self::assertEquals([$sampleMessage], $publisher->getMessages());
 
         $publisher->publish($sampleMessage);
