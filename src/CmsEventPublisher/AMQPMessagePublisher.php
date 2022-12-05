@@ -7,7 +7,7 @@ use PhpAmqpLib\Message\AMQPMessage;
 
 class AMQPMessagePublisher implements MessagePublisherInterface
 {
-    private const EXCHANGE_TYPE = 'fanout';
+    private const EXCHANGE_TYPE = 'topic';
     private const EXCHANGE_NAME = 'cms.content.updates';
     private const EXCHANGE_DURABLE = true;
     private const EXCHANGE_PASSIVE = false;
@@ -17,13 +17,14 @@ class AMQPMessagePublisher implements MessagePublisherInterface
         private string $host,
         private int $port,
         private string $user,
-        private string $pass
+        private string $pass,
+        private string $vhost,
     ) {
     }
 
     public function publish(MessageInterface $message): void
     {
-        $connection = new AMQPStreamConnection($this->host, $this->port, $this->user, $this->pass);
+        $connection = new AMQPStreamConnection($this->host, $this->port, $this->user, $this->pass, $this->vhost);
         $channel = $connection->channel();
 
         //create the exchange if it doesn't exist already
