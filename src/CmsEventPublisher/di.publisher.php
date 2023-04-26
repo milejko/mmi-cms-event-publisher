@@ -34,6 +34,7 @@ return [
         );
     },
 
+    // Http Message Publisher
     HttpMessagePublisherInterface::class => function (ContainerInterface $container) {
         return new HttpMessagePublisher((bool)$container->get('cmsEventPublisher.http'));
     }
