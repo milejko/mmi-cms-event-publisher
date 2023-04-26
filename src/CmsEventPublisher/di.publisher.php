@@ -3,6 +3,8 @@
 use CmsEventPublisher\AMQPMessagePublisher;
 use CmsEventPublisher\InMemoryMessagePublisher;
 use CmsEventPublisher\MessagePublisherInterface;
+use CmsEventPublisher\HttpMessagePublisher;
+use CmsEventPublisher\HttpMessagePublisherInterface;
 use Psr\Container\ContainerInterface;
 
 use function DI\env;
@@ -14,6 +16,7 @@ return [
     'cmsEventPublisher.rabbitmq.vhost'    => env('CMS_EVENT_PUBLISHER_RABBITMQ_VHOST', 'cms'),
     'cmsEventPublisher.rabbitmq.username' => env('CMS_EVENT_PUBLISHER_RABBITMQ_USERNAME', ''),
     'cmsEventPublisher.rabbitmq.password' => env('CMS_EVENT_PUBLISHER_RABBITMQ_PASSWORD', ''),
+    'cmsEventPublisher.http'              => env('CMS_EVENT_PUBLISHER_HTTP', false),
 
     //message publisher
     MessagePublisherInterface::class => function (ContainerInterface $container) {
@@ -29,5 +32,9 @@ return [
             $container->get('cmsEventPublisher.rabbitmq.password'),
             $container->get('cmsEventPublisher.rabbitmq.vhost'),
         );
+    },
+
+    HttpMessagePublisherInterface::class => function (ContainerInterface $container) {
+        return new HttpMessagePublisher((bool)$container->get('cmsEventPublisher.http'));
     }
 ];
