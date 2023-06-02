@@ -5,10 +5,9 @@ namespace CmsEventPublisher;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
-class AMQPMessagePublisher implements MessagePublisherInterface
+class AmqpMessagePublisher implements MessagePublisherInterface
 {
     private const EXCHANGE_TYPE = 'topic';
-    private const EXCHANGE_NAME = 'cms.content.updates';
     private const EXCHANGE_DURABLE = true;
     private const EXCHANGE_PASSIVE = false;
     private const EXCHANGE_AUTODELETE = false;
@@ -17,26 +16,27 @@ class AMQPMessagePublisher implements MessagePublisherInterface
         private string $host,
         private int $port,
         private string $user,
-        private string $pass,
+        private string $password,
         private string $vhost,
+        private string $exchange
     ) {
     }
 
     public function publish(MessageInterface $message): void
     {
-        $connection = new AMQPStreamConnection($this->host, $this->port, $this->user, $this->pass, $this->vhost);
+        $connection = new AMQPStreamConnection($this->host, $this->port, $this->user, $this->password, $this->vhost);
         $channel = $connection->channel();
 
         //create the exchange if it doesn't exist already
         $channel->exchange_declare(
-            self::EXCHANGE_NAME,
+            $this->exchange,
             self::EXCHANGE_TYPE,
             self::EXCHANGE_PASSIVE,
             self::EXCHANGE_DURABLE,
             self::EXCHANGE_AUTODELETE
         );
 
-        $channel->basic_publish(new AMQPMessage($message->getContent()), self::EXCHANGE_NAME, $message->getRoute());
+        $channel->basic_publish(new AMQPMessage($message->getContent()), $this->exchange, $message->getRoute());
         $channel->close();
         $connection->close();
     }
