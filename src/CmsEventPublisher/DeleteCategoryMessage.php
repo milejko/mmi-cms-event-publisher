@@ -2,26 +2,12 @@
 
 namespace CmsEventPublisher;
 
-use Cms\Orm\CmsCategoryRecord;
-
-final class DeleteCategoryMessage implements MessageInterface
+final class DeleteCategoryMessage extends AbstractCategoryMessage
 {
-    public function __construct(private CmsCategoryRecord $cmsCategoryRecord)
-    {
-    }
+    private const OPERATION_NAME = 'delete';
 
-    public function getContent(): string
+    public function getOperationName(): string
     {
-        return (string) json_encode([
-            'operation' => 'delete',
-            'data' => [
-                'id' => $this->cmsCategoryRecord->id
-            ]
-        ]);
-    }
-
-    public function getRoute(): string
-    {
-        return $this->cmsCategoryRecord->getScope();
+        return self::OPERATION_NAME;
     }
 }

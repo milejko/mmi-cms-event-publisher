@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\CmsEventPublisher;
 
+use Cms\App\CmsSkinsetConfig;
 use Cms\Orm\CmsCategoryRecord;
 use CmsEventPublisher\DeleteCategoryMessage;
 use CmsEventPublisher\InMemoryMessagePublisher;
@@ -16,7 +17,9 @@ class FileMessagePublisherTest extends TestCase
         $sampleRecord->id = 1234;
         $sampleRecord->template = 'application/folder';
 
-        $sampleMessage = new DeleteCategoryMessage($sampleRecord);
+        $sampleSkinsetConfig = new CmsSkinsetConfig();
+
+        $sampleMessage = new DeleteCategoryMessage($sampleRecord, $sampleSkinsetConfig);
         $publisher->publish($sampleMessage);
 
         self::assertEquals([$sampleMessage], $publisher->getMessages());
