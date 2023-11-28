@@ -31,9 +31,7 @@ class AmqpMessagePublisher implements MessagePublisherInterface
 
     public function publish(MessageInterface $message): void
     {
-        $channel = $this->getChannel();
-        $channel->basic_publish(new AMQPMessage($message->getContent()), $this->exchange, $message->getRoute());
-        $channel->close();
+        $this->getChannel()->basic_publish(new AMQPMessage($message->getContent()), $this->exchange, $message->getRoute());
     }
 
     private function getConnection(): AMQPStreamConnection
