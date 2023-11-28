@@ -16,8 +16,8 @@ class AmqpMessagePublisher implements MessagePublisherInterface
     private const CONNECTION_TIMEOUT = 1.0;
     private const READ_WRITE_TIMEOUT = 2.0;
 
-    private ?AMQPStreamConnection $connection = null;
-    private ?AMQPChannel $channel = null;
+    private AMQPStreamConnection $connection;
+    private AMQPChannel $channel;
 
     public function __construct(
         private string $host,
@@ -27,19 +27,18 @@ class AmqpMessagePublisher implements MessagePublisherInterface
         private string $vhost,
         private string $exchange
     ) {
+        $this->connection = $this->getConnection();
+        $this->channel = $this->getChannel($this->connection);
     }
 
     public function publish(MessageInterface $message): void
     {
-        $this->getChannel()->basic_publish(new AMQPMessage($message->getContent()), $this->exchange, $message->getRoute());
+        $this->channel->basic_publish(new AMQPMessage($message->getContent()), $this->exchange, $message->getRoute());
     }
 
     private function getConnection(): AMQPStreamConnection
     {
-        if (null !== $this->connection) {
-            return $this->connection;
-        }
-        $connection = new AMQPStreamConnection(
+        return new AMQPStreamConnection(
             $this->host,
             $this->port,
             $this->user,
@@ -52,15 +51,11 @@ class AmqpMessagePublisher implements MessagePublisherInterface
             self::CONNECTION_TIMEOUT,
             self::READ_WRITE_TIMEOUT,
         );
-        return $this->connection = $connection;
     }
 
-    private function getChannel(): AMQPChannel
+    private function getChannel(AMQPStreamConnection $connection): AMQPChannel
     {
-        if (null !== $this->channel) {
-            return $this->channel;
-        }
-        $channel = $this->getConnection()->channel();
+        $channel = $connection->channel();
 
         //create the exchange if it doesn't exist already
         $channel->exchange_declare(
@@ -70,7 +65,7 @@ class AmqpMessagePublisher implements MessagePublisherInterface
             self::EXCHANGE_DURABLE,
             self::EXCHANGE_AUTODELETE
         );
-        return $this->channel = $channel;
+        return $channel;
     }
 
     public function __destruct()
