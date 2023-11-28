@@ -39,7 +39,7 @@ class AmqpMessagePublisher implements MessagePublisherInterface
         if ($this->connection instanceof AMQPStreamConnection) {
             return $this->connection;
         }
-        return $this->connection = new AMQPStreamConnection(
+        $connection = new AMQPStreamConnection(
             $this->host,
             $this->port,
             $this->user,
@@ -52,6 +52,7 @@ class AmqpMessagePublisher implements MessagePublisherInterface
             self::CONNECTION_TIMEOUT,
             self::READ_WRITE_TIMEOUT,
         );
+        return $this->connection = $connection;
     }
 
     private function getChannel(): AMQPChannel
@@ -59,17 +60,17 @@ class AmqpMessagePublisher implements MessagePublisherInterface
         if ($this->channel instanceof AMQPChannel) {
             return $this->channel;
         }
-        $this->channel = $this->getConnection()->channel();
+        $channel = $this->getConnection()->channel();
 
         //create the exchange if it doesn't exist already
-        $this->channel->exchange_declare(
+        $channel->exchange_declare(
             $this->exchange,
             self::EXCHANGE_TYPE,
             self::EXCHANGE_PASSIVE,
             self::EXCHANGE_DURABLE,
             self::EXCHANGE_AUTODELETE
         );
-        return $this->channel;
+        return $this->channel = $channel;
     }
 
     public function __destruct()
