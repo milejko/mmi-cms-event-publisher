@@ -19,6 +19,8 @@ class AmqpMessagePublisher implements MessagePublisherInterface
     private AMQPStreamConnection $connection;
     private AMQPChannel $channel;
 
+    private bool $connected = false;
+
     public function __construct(
         private string $host,
         private int $port,
@@ -27,13 +29,20 @@ class AmqpMessagePublisher implements MessagePublisherInterface
         private string $vhost,
         private string $exchange
     ) {
-        $this->connection = $this->getConnection();
-        $this->channel = $this->getChannel($this->connection);
     }
 
     public function publish(MessageInterface $message): void
     {
+        $this->lazyConnect();
         $this->channel->basic_publish(new AMQPMessage($message->getContent()), $this->exchange, $message->getRoute());
+    }
+
+    private function lazyConnect(): void {
+        if ($this->connected) {
+            return;
+        }
+        $this->connection = $this->getConnection();
+        $this->channel = $this->getChannel($this->connection);
     }
 
     private function getConnection(): AMQPStreamConnection
