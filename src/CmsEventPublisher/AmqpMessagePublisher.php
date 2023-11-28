@@ -17,6 +17,7 @@ class AmqpMessagePublisher implements MessagePublisherInterface
     private const READ_WRITE_TIMEOUT = 2.0;
 
     private AMQPStreamConnection $connection;
+    private AMQPChannel $channel;
 
     public function __construct(
         private string $host,
@@ -37,7 +38,7 @@ class AmqpMessagePublisher implements MessagePublisherInterface
 
     private function getConnection(): AMQPStreamConnection
     {
-        if ($this->connection instanceof AMQPStreamConnection) {
+        if (null !== $this->connection) {
             return $this->connection;
         }
         $connection = new AMQPStreamConnection(
@@ -58,6 +59,9 @@ class AmqpMessagePublisher implements MessagePublisherInterface
 
     private function getChannel(): AMQPChannel
     {
+        if (null !== $this->channel) {
+            return $this->channel;
+        }
         $channel = $this->getConnection()->channel();
 
         //create the exchange if it doesn't exist already
@@ -68,11 +72,12 @@ class AmqpMessagePublisher implements MessagePublisherInterface
             self::EXCHANGE_DURABLE,
             self::EXCHANGE_AUTODELETE
         );
-        return $channel;
+        return $this->channel = $channel;
     }
 
     public function __destruct()
     {
+        $this->channel->close();
         $this->connection->close();
     }
 }
