@@ -37,7 +37,8 @@ class AmqpMessagePublisher implements MessagePublisherInterface
         $this->channel->basic_publish(new AMQPMessage($message->getContent()), $this->exchange, $message->getRoute());
     }
 
-    private function lazyConnect(): void {
+    private function lazyConnect(): void
+    {
         if ($this->connected) {
             return;
         }
