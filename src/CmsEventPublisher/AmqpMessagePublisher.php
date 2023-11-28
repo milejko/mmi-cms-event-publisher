@@ -16,8 +16,8 @@ class AmqpMessagePublisher implements MessagePublisherInterface
     private const CONNECTION_TIMEOUT = 1.0;
     private const READ_WRITE_TIMEOUT = 2.0;
 
-    private AMQPStreamConnection $connection;
-    private AMQPChannel $channel;
+    private ?AMQPStreamConnection $connection = null;
+    private ?AMQPChannel $channel = null;
 
     public function __construct(
         private string $host,
