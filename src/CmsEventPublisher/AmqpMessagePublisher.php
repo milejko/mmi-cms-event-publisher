@@ -44,6 +44,7 @@ class AmqpMessagePublisher implements MessagePublisherInterface
         }
         $this->connection = $this->getConnection();
         $this->channel = $this->getChannel($this->connection);
+        $this->connected = true;
     }
 
     private function getConnection(): AMQPStreamConnection
@@ -80,6 +81,9 @@ class AmqpMessagePublisher implements MessagePublisherInterface
 
     public function __destruct()
     {
+        if (!$this->connected) {
+            return;
+        }
         $this->channel->close();
         $this->connection->close();
     }
