@@ -2,6 +2,7 @@
 
 namespace CmsEventPublisher;
 
+use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -12,6 +13,12 @@ class AmqpMessagePublisher implements MessagePublisherInterface
     private const EXCHANGE_PASSIVE = false;
     private const EXCHANGE_AUTODELETE = false;
 
+    private const CONNECTION_TIMEOUT = 1.0;
+    private const READ_WRITE_TIMEOUT = 2.0;
+
+    private AMQPStreamConnection $connection;
+    private AMQPChannel $channel;
+
     public function __construct(
         private string $host,
         private int $port,
@@ -20,11 +27,34 @@ class AmqpMessagePublisher implements MessagePublisherInterface
         private string $vhost,
         private string $exchange
     ) {
+        $this->connection = $this->getConnection();
+        $this->channel = $this->getChannel($this->connection);
     }
 
     public function publish(MessageInterface $message): void
     {
-        $connection = new AMQPStreamConnection($this->host, $this->port, $this->user, $this->password, $this->vhost);
+        $this->channel->basic_publish(new AMQPMessage($message->getContent()), $this->exchange, $message->getRoute());
+    }
+
+    private function getConnection(): AMQPStreamConnection
+    {
+        return new AMQPStreamConnection(
+            $this->host,
+            $this->port,
+            $this->user,
+            $this->password,
+            $this->vhost,
+            false,
+            'AMQPLAIN',
+            null,
+            'en_US',
+            self::CONNECTION_TIMEOUT,
+            self::READ_WRITE_TIMEOUT,
+        );
+    }
+
+    private function getChannel(AMQPStreamConnection $connection): AMQPChannel
+    {
         $channel = $connection->channel();
 
         //create the exchange if it doesn't exist already
@@ -35,9 +65,12 @@ class AmqpMessagePublisher implements MessagePublisherInterface
             self::EXCHANGE_DURABLE,
             self::EXCHANGE_AUTODELETE
         );
+        return $channel;
+    }
 
-        $channel->basic_publish(new AMQPMessage($message->getContent()), $this->exchange, $message->getRoute());
-        $channel->close();
-        $connection->close();
+    public function __destruct()
+    {
+        $this->channel->close();
+        $this->connection->close();
     }
 }
