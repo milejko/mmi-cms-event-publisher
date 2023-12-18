@@ -39,7 +39,7 @@ class AmqpMessagePublisher implements MessagePublisherInterface
 
     private function lazyConnect(): void
     {
-        if ($this->connected) {
+        if ($this->connected && $this->connection->isConnected() && $this->channel->is_open()) {
             return;
         }
         $this->connection = $this->getConnection();
