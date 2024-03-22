@@ -13,8 +13,8 @@ class AmqpMessagePublisher implements MessagePublisherInterface
     private const EXCHANGE_PASSIVE = false;
     private const EXCHANGE_AUTODELETE = false;
 
-    private const CONNECTION_TIMEOUT = 1.0;
-    private const READ_WRITE_TIMEOUT = 2.0;
+    private const CONNECTION_TIMEOUT = 2.0;
+    private const READ_WRITE_TIMEOUT = 4.0;
 
     private AMQPStreamConnection $connection;
     private AMQPChannel $channel;
