@@ -20,7 +20,7 @@ class UpdateCategoryMessageTest extends TestCase
         $sampleSkinsetConfig = new SampleSkinsetMock();
 
         $message = new UpdateCategoryMessage($sampleCategory, $sampleSkinsetConfig);
-        self::assertEquals('{"operation":"update","data":{"id":1234,"template":"application\/folder","path":"","opensNewWindow":false,"visible":true,"attributes":[],"sections":[],"children":[],"breadcrumbs":[],"siblings":[],"_links":[]}}', $message->getContent());
+        self::assertEquals('{"operation":"update","record":{"id":1234,"cmsAuthId":null,"template":"application\/folder","cmsCategoryOriginalId":null,"status":null,"lang":null,"name":null,"uri":"","path":null,"customUri":null,"redirectUri":null,"parentId":null,"order":null,"dateAdd":null,"dateModify":null,"configJson":null,"title":null,"description":null,"blank":null,"active":null,"visible":null},"data":{"id":1234,"template":"application\/folder","path":"","opensNewWindow":false,"visible":true,"attributes":[],"sections":[],"children":[],"siblings":[],"breadcrumbs":[],"_links":[]}}', $message->getContent());
         self::assertEquals('application', $message->getRoute());
     }
 }
