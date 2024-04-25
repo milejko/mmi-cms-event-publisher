@@ -20,6 +20,7 @@ abstract class AbstractCategoryMessage implements MessageInterface
         return (string) json_encode(
             [
                 'operation' => $this->getOperationName(),
+                'record' => $this->cmsCategoryRecord->toArray(),
                 'data' => $this->getCategoryData()
             ]
         );
