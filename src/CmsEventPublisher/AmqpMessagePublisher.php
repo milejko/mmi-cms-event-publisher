@@ -15,6 +15,8 @@ class AmqpMessagePublisher implements MessagePublisherInterface
 
     private const CONNECTION_TIMEOUT = 2.0;
     private const READ_WRITE_TIMEOUT = 4.0;
+    private const HEARTBEAT = 30;
+    private const KEEPALIVE = false;
 
     private AMQPStreamConnection $connection;
     private AMQPChannel $channel;
@@ -61,6 +63,9 @@ class AmqpMessagePublisher implements MessagePublisherInterface
             'en_US',
             self::CONNECTION_TIMEOUT,
             self::READ_WRITE_TIMEOUT,
+            null,
+            self::KEEPALIVE,
+            self::HEARTBEAT
         );
     }
 
