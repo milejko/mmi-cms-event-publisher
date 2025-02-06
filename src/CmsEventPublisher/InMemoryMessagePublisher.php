@@ -2,8 +2,6 @@
 
 namespace CmsEventPublisher;
 
-use Psr\Log\LoggerInterface;
-
 class InMemoryMessagePublisher implements MessagePublisherInterface
 {
     /**
