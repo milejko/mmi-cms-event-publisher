@@ -2,7 +2,6 @@
 
 namespace CmsEventPublisher;
 
-use Exception;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -17,11 +16,6 @@ class AmqpMessagePublisher implements MessagePublisherInterface
     private const CONNECTION_TIMEOUT = 2.0;
     private const READ_WRITE_TIMEOUT = 4.0;
 
-    private AMQPStreamConnection $connection;
-    private AMQPChannel $channel;
-
-    private bool $connected = false;
-
     public function __construct(
         private string $host,
         private int $port,
@@ -34,25 +28,11 @@ class AmqpMessagePublisher implements MessagePublisherInterface
 
     public function publish(MessageInterface $message): void
     {
-        $this->lazyConnect();
-        $amqpMessage = new AMQPMessage($message->getContent());
-        try {
-            $this->channel->basic_publish($amqpMessage, $this->exchange, $message->getRoute());
-        } catch (Exception) {
-            // retry as probably the connection was closed
-            $this->channel->basic_publish($amqpMessage, $this->exchange, $message->getRoute());
-        }
-    }
-
-    private function lazyConnect(): void
-    {
-        //@TODO: improve this check
-        if ($this->connected && $this->connection->isConnected() && $this->channel->is_open()) {
-            return;
-        }
-        $this->connection = $this->getConnection();
-        $this->channel = $this->getChannel($this->connection);
-        $this->connected = true;
+        $connection = $this->getConnection();
+        $channel = $this->getChannel($connection);
+        $channel->basic_publish(new AMQPMessage($message->getContent()), $this->exchange, $message->getRoute());
+        $channel->close();
+        $connection->close();
     }
 
     private function getConnection(): AMQPStreamConnection
@@ -85,14 +65,5 @@ class AmqpMessagePublisher implements MessagePublisherInterface
             self::EXCHANGE_AUTODELETE
         );
         return $channel;
-    }
-
-    public function __destruct()
-    {
-        if (!$this->connected) {
-            return;
-        }
-        $this->channel->close();
-        $this->connection->close();
     }
 }
