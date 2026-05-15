@@ -8,7 +8,7 @@ use CmsEventPublisher\DeleteCategoryMessage;
 use CmsEventPublisher\InMemoryMessagePublisher;
 use PHPUnit\Framework\TestCase;
 
-class FileMessagePublisherTest extends TestCase
+class InMemoryMessagePublisherTest extends TestCase
 {
     public function testIfMessageIsPublished(): void
     {
